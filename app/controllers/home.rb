@@ -16,6 +16,6 @@ App::App.controllers :home do
   # end
 
   get :index, :map => '/' do
-    'Hello world!'
+    'Hello world!' + CONSTANTS[:base_url]
   end
 end
