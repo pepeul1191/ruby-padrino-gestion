@@ -30,12 +30,8 @@ Padrino.configure_apps do
   set :session_secret, 'cf31aa1c1bf466e31c98a1de144541a9d9fcd2c729e50723ff4ced9e5f34cc92'
   set :protection, :except => :path_traversal
   set :protect_from_csrf, true
-  set :views, Proc.new { File.join('templates') }
-  set :erb, :layout => Proc.new { File.join('templates/layouts') }
-
-  before do
-    headers['server'] = 'Ruby, Ubuntu'
-  end
+  set :views, Proc.new { File.join('views') }
+  set :erb, :layout => Proc.new { File.join('views/layouts') }
 end
 
 # Mounts the core application for this project
