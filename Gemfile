@@ -30,3 +30,5 @@ gem 'padrino', '0.14.3'
 # %w(core support gen helpers cache mailer admin).each do |g|
 #   gem 'padrino-' + g, '0.14.3'
 # end
+gem "sequel"
+gem "sqlite3"

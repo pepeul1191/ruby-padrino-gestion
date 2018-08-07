@@ -6,3 +6,4 @@ vendor/gems/*
 Gemfile.lock
 .bundle
 bin/
+bower_components

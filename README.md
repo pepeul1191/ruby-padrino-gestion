@@ -24,6 +24,13 @@ Crear controlador en aplicación principal:
 
     $ padrino g controller base --app one
 
+### Mmigraciones
+
+Migraciones con DBMATE - ubicaciones:
+
+    $ dbmate -d "ubicaciones/migrations" -e "DATABASE_UBICACIONES" new <<nombre_de_migracion>>
+    $ dbmate -d "ubicaciones/migrations" -e "DATABASE_UBICACIONES" up
+
 ---
 
 Fuentes:
