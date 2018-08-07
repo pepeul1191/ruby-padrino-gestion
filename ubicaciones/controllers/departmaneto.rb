@@ -20,6 +20,7 @@ App::Ubicaciones.controllers :departmaneto do
   # end
 
   get :listar, :map => '/departamento/listar' do
+    some_method
     rpta = []
     status = 200
     begin
