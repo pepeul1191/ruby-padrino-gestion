@@ -4,3 +4,5 @@ vendor/gems/*
 .sass-cache/*
 .*.sw*
 Gemfile.lock
+.bundle
+bin/
