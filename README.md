@@ -4,9 +4,13 @@ Instalar dependencias:
 
     $ bundler install --binstubs
 
-Arrancar aplicación:
+Arrancar aplicación con Webrick:
 
     $ padrino s -p 4000
+
+Arrancar aplicación con Puma:
+
+    $ puma -p 4000
 
 Crear sub aplicación:
 

@@ -20,6 +20,6 @@ App::Ubicaciones.controllers :departmaneto do
   # end
 
   get :listar, :map => '/departamento/listar' do
-    'listar departamentos'
+    'listar departamentos sdfasd'
   end
 end
