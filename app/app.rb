@@ -60,5 +60,9 @@ module App
     #     render 'errors/500'
     #   end
     #
+
+    before do
+      headers['server'] = 'Ruby, Ubuntu'
+    end
   end
 end
