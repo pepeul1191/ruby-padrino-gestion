@@ -32,6 +32,10 @@ Padrino.configure_apps do
   set :protect_from_csrf, true
   set :views, Proc.new { File.join('views') }
   set :erb, :layout => Proc.new { File.join('views/layouts') }
+
+  before do
+    headers['Server'] = 'Ruby, Ubuntu'
+  end
 end
 
 # Mounts the core application for this project
