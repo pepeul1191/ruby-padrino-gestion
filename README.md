@@ -20,7 +20,7 @@ Crear controlador en aplicación principal:
 
     $ padrino g controller base
 
-Crear controlador en aplicación principal:
+Crear controlador en sub-aplicación:
 
     $ padrino g controller base --app one
 
