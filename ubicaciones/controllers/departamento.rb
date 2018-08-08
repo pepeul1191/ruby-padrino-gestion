@@ -4,7 +4,7 @@ App::Ubicaciones.controllers :departmaneto do
     rpta = []
     status = 200
     begin
-      rpta = Departamento.all().to_a
+      rpta = Models::Ubicaciones::Departamento.all().to_a
     rescue Exception => e
       status = 500
       rpta = {

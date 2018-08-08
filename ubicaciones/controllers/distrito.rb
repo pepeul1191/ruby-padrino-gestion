@@ -9,7 +9,7 @@ App::Ubicaciones.controllers :distrito do
     status = 200
     begin
       provincia_id = params['provincia_id']
-      rpta = Distrito.select(:id, :nombre).where(:provincia_id => provincia_id).all().to_a
+      rpta = Models::Ubicaciones::Distrito.select(:id, :nombre).where(:provincia_id => provincia_id).all().to_a
     rescue Exception => e
       status = 500
       rpta = {
@@ -29,7 +29,7 @@ App::Ubicaciones.controllers :distrito do
     status = 200
     begin
       distrito_id = params['distrito_id']
-      rpta = VWDistritoProvinciaDepartamento.where(:id => distrito_id).first.nombre
+      rpta = Models::Ubicaciones::VWDistritoProvinciaDepartamento.where(:id => distrito_id).first.nombre
     rescue Exception => e
       status = 500
       rpta = {
@@ -49,7 +49,7 @@ App::Ubicaciones.controllers :distrito do
     status = 200
     begin
       nombre = params['nombre']
-      rpta = VWDistritoProvinciaDepartamento.where(Sequel.like(:nombre, nombre + '%')).limit(10).to_a
+      rpta = Models::Ubicaciones::VWDistritoProvinciaDepartamento.where(Sequel.like(:nombre, nombre + '%')).limit(10).to_a
     rescue Exception => e
       status = 500
       rpta = {

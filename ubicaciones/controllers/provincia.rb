@@ -5,7 +5,7 @@ App::Ubicaciones.controllers :provincia do
     status = 200
     begin
       departamento_id = params['departamento_id']
-      rpta = Provincia.select(:id, :nombre).where(:departamento_id => departamento_id).all().to_a
+      rpta = Models::Ubicaciones::Provincia.select(:id, :nombre).where(:departamento_id => departamento_id).all().to_a
     rescue Exception => e
       status = 500
       rpta = {
