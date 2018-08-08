@@ -1,4 +1,8 @@
 App::Ubicaciones.controllers :departmaneto do
+  before :listar do
+    check_csrf
+  end
+
   get :listar, :map => '/departamento/listar' do
     some_method
     rpta = []
