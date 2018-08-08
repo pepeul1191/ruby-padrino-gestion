@@ -3,7 +3,7 @@ CONSTANTS = {
   :static_url => 'http://localhost:5000/',
   :csrf => {
     :secret => 'mpt/sr6eS2AlCRHU7DVThMgFTN08pnfSDf/C94eZx7udfm0lvgaYWLYJttYPKzGKDTlXwVU/d2FOxbKkgNlsTw==',
-    :key => 'Csrf-Val',
+    :key => 'Csrf_Val',
   },
   :sistema_id => 4,
   :ambiente => 'desarrollo',

@@ -1,4 +1,8 @@
 App::Ubicaciones.controllers :distrito do
+  before :listar, :nombre, :buscar do
+    check_csrf
+  end
+
   get :listar, :map => '/distrito/listar/:provincia_id' do
     some_method
     rpta = []
