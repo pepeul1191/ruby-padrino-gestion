@@ -36,6 +36,37 @@ Padrino.configure_apps do
   before do
     headers['Server'] = 'Ruby, Ubuntu'
   end
+
+  not_found do
+    rpta = ''
+    case request.env['REQUEST_METHOD']
+    when 'GET'
+      error = {
+        :numero => 404,
+        :mensaje => 'Archivo no encontrado',
+        :descripcion => 'La página que busca no se encuentra en el servidor',
+        :icono => 'fa fa-exclamation-triangle'
+      }
+      locals = {
+        :constants => CONSTANTS,
+        :csss => error_css(),
+        :jss => error_js(),
+        :error => error,
+        :title => 'Error'
+      }
+      status 404
+      return erb :'error/access', :layout => :'blank.erb', :locals => locals
+    else
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Recurso no encontrado',
+          'El recurso que busca no se encuentra en el servidor'
+        ]}
+    end
+    status 404
+    rpta.to_json
+  end
 end
 
 # Mounts the core application for this project

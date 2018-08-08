@@ -2,31 +2,29 @@
 
 module App
   class App
-    module LoginHelper
-      def login_css
+    module ErrorHelper
+      def error_css
         rpta = nil
         if CONSTANTS[:ambiente] == 'desarrollo'
           rpta = [
             'bower_components/bootstrap/dist/css/bootstrap.min',
             'bower_components/font-awesome/css/font-awesome.min',
             'bower_components/swp-backbone/assets/css/constants',
-            'bower_components/swp-backbone/assets/css/login',
             'assets/css/constants',
-            'assets/css/login',
+            'assets/css/error',
           ]
         else
           rpta = [
-            'dist/login.min',
+            'dist/error.min',
           ]
         end
         rpta
       end
 
-      def login_js
+      def error_js
         rpta = nil
         if CONSTANTS[:ambiente] == 'desarrollo'
           rpta = [
-
           ]
         else
           rpta = [
@@ -36,6 +34,6 @@ module App
       end
     end
 
-    helpers LoginHelper
+    helpers ErrorHelper
   end
 end
