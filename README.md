@@ -37,3 +37,4 @@ Fuentes:
 
 + http://padrinorb.com/
 + http://padrinorb.com/guides/generators/sub-applications/
++ https://stackoverflow.com/questions/26594897/override-not-found-sinatra-application
