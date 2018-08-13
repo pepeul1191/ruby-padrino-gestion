@@ -58,4 +58,6 @@ end
 # Mounts the core application for this project
 
 Padrino.mount('App::Ubicaciones', :app_file => Padrino.root('ubicaciones/app.rb')).to('/ubicaciones')
+
+Padrino.mount('App::Archivos', :app_file => Padrino.root('archivos/app.rb')).to('/archivos')
 Padrino.mount('App::App', :app_file => Padrino.root('app/app.rb')).to('/')
