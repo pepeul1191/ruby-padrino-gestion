@@ -25,5 +25,28 @@ Padrino.configure_apps do
     def some_method
       puts '1 +++++++++++++++++++++++++++++'
     end
+
+    def menu_modulos
+      rpta = []
+      status = 200
+      begin
+        rpta = Models::Accesos::Modulo.all().to_a
+      rescue Exception => e
+        status = 500
+        t = {
+          :tipo_mensaje => 'error',
+          :mensaje => [
+            'Se ha producido un error en listar los departamentos',
+            e.message
+          ]}
+        puts 'menu_modulos - error'
+        puts t
+      end
+      rpta.to_json
+    end
+
+    def menu_items(modulo)
+
+    end
   end
 end
