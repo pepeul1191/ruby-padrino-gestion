@@ -38,7 +38,6 @@ module App
             'bower_components/swp-backbone/views/modal',
             'bower_components/swp-backbone/views/upload',
             'bower_components/swp-backbone/views/autocomplete',
-            'models/accesos/sistema',
             'models/accesos/modulo',
             'models/accesos/subtitulo',
             'models/accesos/item',
