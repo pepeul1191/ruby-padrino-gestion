@@ -63,4 +63,42 @@ App::Accesos.controllers :usuario do
     status status
     rpta
   end
+
+  post :guardar_contrasenia, :map => '/usuario/guardar_contrasenia' do
+    data = JSON.parse(params[:contrasenia])
+    rpta = []
+    status = 200
+    DB_ACCESOS.transaction do
+      begin
+        id = data['id']
+        contrasenia = data['contrasenia']
+        DB_ACCESOS.transaction do
+          begin
+            e = Usuario.where(:id => id).first
+            e.contrasenia = contrasenia
+            e.save
+          rescue Exception => e
+            error = true
+            Sequel::Rollback
+          end
+        end
+        rpta = {
+          :tipo_mensaje => 'success',
+          :mensaje => [
+            'Se ha el cambio de contraseña del usuario',
+          ]}
+      rescue Exception => e
+        Sequel::Rollback
+        status = 500
+        rpta = {
+          :tipo_mensaje => 'error',
+          :mensaje => [
+            'Se ha producido un error en actualizar la contraseña del usaurio',
+            e.message
+          ]}
+      end
+    end
+    status status
+    rpta.to_json
+  end
 end
