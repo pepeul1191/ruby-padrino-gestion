@@ -36,7 +36,7 @@ Migraciones con DBMATE - archivos:
     $ dbmate -d "archivos/migrations" -e "DATABASE_ARCHIVOS" new <<nombre_de_migracion>>
     $ dbmate -d "archivos/migrations" -e "DATABASE_ARCHIVOS" up
 
-Migraciones con DBMATE - archivos:
+Migraciones con DBMATE - accesos:
 
     $ dbmate -d "accesos/migrations" -e "DATABASE_ACCESOS" new <<nombre_de_migracion>>
     $ dbmate -d "accesos/migrations" -e "DATABASE_ACCESOS" up

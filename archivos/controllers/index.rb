@@ -4,7 +4,7 @@ App::Archivos.controllers :index do
       :constants => CONSTANTS,
       :csss => archivos_index_css(),
       :jss => archivos_index_js(),
-      :title => 'Bienvenido',
+      :title => 'Gestión de Archivos',
       :modulos => menu_modulos,
       :items => menu_items('Archivos'),
       :data => {
