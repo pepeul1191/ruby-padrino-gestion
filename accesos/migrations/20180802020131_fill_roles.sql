@@ -1,8 +1,7 @@
 -- migrate:up
 
-INSERT INTO roles (nombre, sistema_id) VALUES (
-  'Administrador',
-  1
+INSERT INTO roles (nombre) VALUES (
+  'Administrador'
 );
 
 -- migrate:down
