@@ -127,4 +127,23 @@ App::Archivos.controllers :extension do
     status status
     rpta.to_json
   end
+
+  get :nombre_mime, :map => '/extension/nombre_mime/:extension_id' do
+    rpta = nil
+    status = 200
+    begin
+      rpta = Models::Archivos::Extension.select(:nombre, :mime).where(:id => params[:extension_id]).first
+    rescue Exception => e
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error el nombre y mime de la extensión',
+          e.message
+        ]
+      }.to_json
+      status = 500
+    end
+    status status
+    rpta.to_json
+  end
 end
