@@ -175,4 +175,46 @@ App::Accesos.controllers :usuario do
     status status
     rpta
   end
+
+  post :guardar_usuario_correo, :map => '/usuario/guardar_usuario_correo' do
+    data = JSON.parse(params[:usuario])
+    rpta = []
+    status = 200
+    DB_ACCESOS.transaction do
+      begin
+        id = data['id']
+        usuario = data['usuario']
+        correo = data['correo']
+        estado_usuario_id = data['estado_usuario_id']
+        DB_ACCESOS.transaction do
+          begin
+            e = Models::Accesos::Usuario.where(:id => id).first
+            e.usuario = usuario
+            e.correo = correo
+            e.estado_usuario_id = estado_usuario_id
+            e.save
+          rescue Exception => e
+            error = true
+            Sequel::Rollback
+          end
+        end
+        rpta = {
+          :tipo_mensaje => 'success',
+          :mensaje => [
+            'Se ha registrado los cambios en los datos generales del usuario',
+          ]}
+      rescue Exception => e
+        Sequel::Rollback
+        status = 500
+        rpta = {
+          :tipo_mensaje => 'error',
+          :mensaje => [
+            'Se ha producido un error en guardar los datos generales del usuario',
+            e.message
+          ]}
+      end
+    end
+    status status
+    rpta.to_json
+  end
 end
