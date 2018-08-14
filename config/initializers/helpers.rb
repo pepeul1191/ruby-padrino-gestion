@@ -28,9 +28,62 @@ Padrino.configure_apps do
 
     def menu_modulos
       rpta = []
-      status = 200
       begin
         rpta = Models::Accesos::Modulo.all().to_a
+      rescue Exception => e
+        status = 500
+        t = {
+          :tipo_mensaje => 'error',
+          :mensaje => [
+            'Se ha producido un error en listar módulos',
+            e.message
+          ]}
+        puts 'menu_modulos - error'
+        puts t
+      end
+      rpta.to_json
+    end
+
+    def menu_items(modulo)
+      rpta = []
+      begin
+        rs = Models::Accesos::VWModuloSubtituloItem.where(:modulo => modulo).all().to_a
+        subtitulos = []
+        subtitulos_temp = []
+        items = []
+        for r in rs
+          subtitulo = r.subtitulo
+          if subtitulos.include?(subtitulo) == false
+            subtitulos.push(subtitulo)
+            i = {
+              :subtitulo => r.subtitulo,
+              :items => [],
+            }
+            items.push(i)
+          end
+          t = {
+            :subtitulo => r.subtitulo,
+            :item => r.item,
+            :url => r.url_item,
+          }
+          subtitulos_temp.push(t)
+        end
+        for subtitulo in subtitulos
+          for temp in subtitulos_temp
+            if(temp[:subtitulo] == subtitulo)
+              i = {
+                :item => temp[:item],
+                :url => temp[:url],
+              }
+              for item in items
+                if subtitulo == item[:subtitulo]
+                  item[:items].push(i)
+                end
+              end
+            end
+          end
+        end
+        rpta = items
       rescue Exception => e
         status = 500
         t = {
@@ -43,10 +96,6 @@ Padrino.configure_apps do
         puts t
       end
       rpta.to_json
-    end
-
-    def menu_items(modulo)
-
     end
   end
 end

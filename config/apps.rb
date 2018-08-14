@@ -37,6 +37,7 @@ Padrino.configure_apps do
     headers['Server'] = 'Ruby, Ubuntu'
   end
 
+  """
   error Sinatra::NotFound do
     rpta = ''
     case request.env['REQUEST_METHOD']
@@ -53,6 +54,7 @@ Padrino.configure_apps do
     status 404
     rpta.to_json
   end
+  """
 end
 
 # Mounts the core application for this project

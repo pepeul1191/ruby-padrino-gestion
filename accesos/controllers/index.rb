@@ -6,7 +6,7 @@ App::Accesos.controllers :index do
       :jss => index_js(),
       :title => 'Bienvenido',
       :modulos => menu_modulos,
-  		:items => '[]', #menu_items('Accesos'),
+  		:items => menu_items('Accesos'),
       :data => {
   			:mensaje => false,
   			:titulo_pagina => 'Gestión de Accesos',

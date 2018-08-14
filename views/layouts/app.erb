@@ -9,8 +9,8 @@
   <title><%=title%></title>
   <%= load_css(csss) %>
   <script type="text/javascript">
-    var BASE_URL = "<%=constants[:BASE_URL]%>";
-    var STATICS_URL  = "<%=constants[:STATIC_URL]%>";
+    var BASE_URL = "<%=constants[:base_url]%>";
+    var STATICS_URL  = "<%=constants[:static_url]%>";
     var MODULOS_JSON = JSON.parse('<%=modulos%>');
     var ITEMS_JSON = JSON.parse('<%=items%>');
     var DATA = JSON.parse('<%=data%>');
