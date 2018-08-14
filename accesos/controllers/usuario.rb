@@ -101,4 +101,78 @@ App::Accesos.controllers :usuario do
     status status
     rpta.to_json
   end
+
+  post :correo_repetido, :map => '/usuario/correo_repetido' do
+    rpta = 0
+    error = false
+    status = 200
+    begin
+      data = JSON.parse(params[:data])
+      usuario_id = data['id']
+      correo = data['correo']
+      rpta = 0
+      if usuario_id == 'E'
+        #SELECT COUNT(*) AS cantidad FROM usuarios WHERE correo = ?
+        rpta = Models::Accesos::Usuario.where(:correo => correo).count
+      else
+        #SELECT COUNT(*) AS cantidad FROM usuarios WHERE correo = ? AND id = ?
+        rpta = Models::Accesos::Usuario.where(:correo => correo, :id => usuario_id).count
+        if rpta == 1
+          rpta = 0
+        else
+          #SELECT COUNT(*) AS cantidad FROM usuarios WHERE correo = ?
+          rpta = Models::Accesos::Usuario.where(:correo => correo).count
+        end
+      end
+      rpta = rpta.to_s
+    rescue Exception => e
+      error = true
+      status = 500
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error en validar el correo del usuario',
+          e.message
+        ]}.to_json
+    end
+    status status
+    rpta
+  end
+
+  post :nombre_repetido, :map => '/usuario/nombre_repetido' do
+    rpta = 0
+    error = false
+    status = 200
+    begin
+      data = JSON.parse(params[:data])
+  	  usuario_id = data['id']
+   	  usuario = data['usuario']
+  		rpta = 0
+  		if usuario_id == 'E'
+  			#SELECT COUNT(*) AS cantidad FROM usuarios WHERE usuario = ?
+  			rpta = Models::Accesos::Usuario.where(:usuario => usuario).count
+  		else
+  			#SELECT COUNT(*) AS cantidad FROM usuarios WHERE usuario = ? AND id = ?
+  			rpta = Models::Accesos::Usuario.where(:usuario => usuario, :id => usuario_id).count
+  			if rpta == 1
+  				rpta = 0
+  			else
+  				#SELECT COUNT(*) AS cantidad FROM usuarios WHERE usuario = ?
+  				rpta = Models::Accesos::Usuario.where(:usuario => usuario).count
+  			end
+  		end
+      rpta = rpta.to_s
+    rescue Exception => e
+      error = true
+      status = 500
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error en validar el nombre de usuario repetido',
+          e.message
+        ]}.to_json
+    end
+    status status
+    rpta
+  end
 end
