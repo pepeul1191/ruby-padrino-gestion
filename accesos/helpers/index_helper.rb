@@ -56,7 +56,6 @@ module App
             'collections/accesos/usuario_collection',
             'data/accesos/tabla_permiso_data',
             'data/accesos/modal_usuario_detalle_data',
-            'data/accesos/modal_usuario_sistema_data',
             'data/accesos/modal_usuario_log_data',
             'data/accesos/modal_usuario_rol_permiso_data',
             'data/accesos/tabla_modulo_subtitulo_data',
