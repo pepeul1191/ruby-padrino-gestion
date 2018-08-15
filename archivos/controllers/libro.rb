@@ -293,19 +293,94 @@ App::Archivos.controllers :libro do
     rpta.to_json
 	end
 
-	def listar_autores
-		rpta = nil
+	get :obtener, :map => '/libro/obtener/:libro_id' do
+    rpta = nil
 		status = 200
 		begin
-			rpta = Archivos::VWLibroAutor.select(:id, :autor_id, :autor_nombre).where(:libro_id => params[:libro_id]).all().to_a.to_json
+			rpta = Models::Archivos::VWLibroArchivo.where(:id => params[:libro_id]).first
 		rescue Exception => e
 			rpta = {
 				:tipo_mensaje => 'error',
 				:mensaje => [
-					'Se ha producido un error en listar los autores del libro',
+					'Se ha producido un error en obtener los datos del libro',
 					e.message
 				]
-			}.to_json
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
+
+  put :subir, :map => '/libro/subir' do
+    rpta = nil
+		status = 200
+		begin
+      file_name_array = params[:myFile][:tempfile].path.split('.')
+      extension = file_name_array[file_name_array.length - 1].strip
+			extension_id = Models::Archivos::Extension.select(:id).where(:nombre => extension).first.id
+			Models::Archivos::Extension.select(:nombre, :mime).where(:id => params[:extension_id]).first.to_json
+			nombre = params[:nombre]
+			ruta = 'public/libros/'
+			# mover el archivo
+      FileUtils.mv(params[:myFile][:tempfile].path, ruta + nombre + '.' + extension)
+			archivo = Models::Archivos::Archivo.new(:nombre => nombre, :ruta => 'libros/', :extension_id => extension_id)
+			archivo.save
+      rpta = {
+				:tipo_mensaje => 'success',
+				:mensaje => [
+					'Se ha cargado un nuevo libro',
+					archivo.id,
+          CONSTANTS[:static_url] + 'libros/' + params[:nombre] + '.' + extension
+				]
+			}
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en cargar el archivo',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
+
+  post :guardar_archivo, :map => '/libro/guardar_archivo' do
+    rpta = nil
+		status = 200
+		data = JSON.parse(params[:data])
+		begin
+			if data['id'] == 'E'
+				status = 500
+				rpta = {
+					:tipo_mensaje => 'error',
+					:mensaje => [
+						'Debe primeo guardar el detalle del libro',
+						'libro.id',
+					]
+				}
+			else
+				archivo = Models::Archivos::Libro.where(:id => data['id']).first
+				archivo.archivo_id = data['archivo_id']
+				archivo.save
+				rpta = {
+					:tipo_mensaje => 'success',
+					:mensaje => [
+						'Se ha agregado el documento al libro',
+					]
+				}
+			end
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en anexar el archivo al libro',
+					e.message
+				]
+			}
 			status = 500
 		end
     status status
