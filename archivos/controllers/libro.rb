@@ -116,4 +116,50 @@ App::Archivos.controllers :libro do
     status status
 		rpta.to_json
   end
+
+  post :guardar, :map => '/libro/guardar_detalle' do
+    rpta = nil
+		status = 200
+		data = JSON.parse(params[:data])
+		begin
+			if data['id'] == 'E'
+				libro = Models::Archivos::Libro.new(
+          :nombre => data['nombre'],
+          :paginas => data['paginas'],
+          :anio => data['anio']
+        )
+				libro.save
+				rpta = {
+					:tipo_mensaje => 'success',
+					:mensaje => [
+						'Se ha registrado el detalle de un nuevo libro',
+						libro.id,
+					]
+				}
+			else
+				archivo = Models::Archivos::Libro.where(:id => data['id']).first
+				archivo.nombre = data['nombre']
+				archivo.paginas = data['paginas']
+				archivo.anio = data['anio']
+				archivo.save
+				rpta = {
+					:tipo_mensaje => 'success',
+					:mensaje => [
+						'Se ha editado el detalle de libro',
+					]
+				}
+			end
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en registrar el detalle del libro',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
 end
