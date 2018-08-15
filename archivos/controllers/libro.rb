@@ -179,7 +179,10 @@ App::Archivos.controllers :libro do
 			begin
 				if nuevos.length != 0
 					nuevos.each do |nuevo|
-						n = Models::Archivos::LibroAutor.new(:libro_id => libro_id, :autor_id => nuevo['autor_id'])
+						n = Models::Archivos::LibroAutor.new(
+              :libro_id => libro_id,
+              :autor_id => nuevo['autor_id']
+            )
 						n.save
 						t = {:temporal => nuevo['id'], :nuevo_id => n.id}
 						array_nuevos.push(t)
@@ -220,6 +223,90 @@ App::Archivos.controllers :libro do
 					'Se ha producido un error en asociar los autores al libro',
 					execption.message]
 				}
+		end
+    status status
+    rpta.to_json
+  end
+
+  post :guardar_categoria, :map => '/libro/guardar/categoria' do
+    rpta = nil
+		status = 200
+		data = JSON.parse(params[:data])
+		nuevos = data['nuevos']
+		editados = data['editados']
+		eliminados = data['eliminados']
+		libro_id = data['extra']['libro_id']
+		rpta = []
+		array_nuevos = []
+		error = false
+		execption = nil
+		DB_ARCHIVOS.transaction do
+			begin
+				if nuevos.length != 0
+					nuevos.each do |nuevo|
+						n = Models::Archivos::LibroCategoria.new(
+              :libro_id => libro_id,
+              :categoria_id => nuevo['categoria_id']
+            )
+						n.save
+						t = {:temporal => nuevo['id'], :nuevo_id => n.id}
+						array_nuevos.push(t)
+					end
+				end
+				if editados.length != 0
+					editados.each do |editado|
+						e = Models::Archivos::LibroCategoria.where(:id => editado['id']).first
+						e.categoria_id = editado['categoria_id']
+						e.libro_id = libro_id
+						e.save
+					end
+				end
+				if eliminados.length != 0
+					eliminados.each do |eliminado|
+						Models::Archivos::LibroCategoria.where(:id => eliminado).delete
+					end
+				end
+			rescue Exception => e
+				Sequel::Rollback
+				error = true
+				execption = e
+			end
+		end
+		if error == false
+			rpta = {
+				:tipo_mensaje => 'success',
+				:mensaje => [
+					'Se ha registrado los cambios en las asociaciones de las categorias al libro',
+					array_nuevos
+					]
+				}
+		else
+			status = 500
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en asociar las categorias al libro',
+					execption.message]
+				}
+		end
+		status status
+    rpta.to_json
+	end
+
+	def listar_autores
+		rpta = nil
+		status = 200
+		begin
+			rpta = Archivos::VWLibroAutor.select(:id, :autor_id, :autor_nombre).where(:libro_id => params[:libro_id]).all().to_a.to_json
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en listar los autores del libro',
+					e.message
+				]
+			}.to_json
+			status = 500
 		end
     status status
     rpta.to_json
