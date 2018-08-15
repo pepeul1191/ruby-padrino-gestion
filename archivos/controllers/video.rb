@@ -363,4 +363,24 @@ App::Archivos.controllers :video do
 		status status
     rpta.to_json
 	end
+
+  get :ruta, :map => '/video/ruta/:video_id' do
+    rpta = nil
+    status = 200
+    begin
+      temp = Models::Archivos::VWVideoArchivo.where(:id => params[:video_id]).first
+      rpta = CONSTANTS[:base_url] + temp.video_ruta
+    rescue Exception => e
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error en mostrar el video',
+          e.message
+        ]
+      }.to_json
+      status = 500
+    end
+    status status
+    rpta
+  end
 end
