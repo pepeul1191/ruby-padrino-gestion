@@ -431,4 +431,24 @@ App::Archivos.controllers :libro do
     status status
     rpta.to_json
   end
+
+  get :ruta, :map => '/libro/ruta/:libro_id' do
+    rpta = nil
+		status = 200
+		begin
+			temp = Models::Archivos::VWLibroArchivo.where(:id => params[:libro_id]).first
+			rpta = CONSTANTS[:base_url] + temp.libro_ruta
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en mostrar el libro',
+					e.message
+				]
+			}.to_json
+			status = 500
+		end
+    status status
+    rpta
+  end
 end
