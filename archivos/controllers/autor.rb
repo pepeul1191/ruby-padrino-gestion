@@ -106,4 +106,23 @@ App::Archivos.controllers :autor do
     status status
     rpta.to_json
   end
+
+  get :buscar, :map => '/autor/buscar' do
+    rpta = nil
+		status = 200
+		begin
+			rpta = Models::Archivos::Autor.where(Sequel.like(:nombre, params[:nombre] + '%')).limit(10).to_a
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en buscar coincidencias en los nombres de los autores',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
 end
