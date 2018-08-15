@@ -194,4 +194,43 @@ App::Archivos.controllers :video do
     status status
     rpta.to_json
   end
+
+  post :guardar_archivo, :map => '/video/guardar_archivo' do
+    rpta = nil
+		status = 200
+		data = JSON.parse(params[:data])
+		begin
+			if data['id'] == 'E'
+				status = 500
+				rpta = {
+					:tipo_mensaje => 'error',
+					:mensaje => [
+						'Debe primeo guardar el detalle del video',
+						video.id,
+					]
+				}
+			else
+				archivo = Models::Archivos::Video.where(:id => data['id']).first
+				archivo.archivo_id = data['archivo_id']
+				archivo.save
+				rpta = {
+					:tipo_mensaje => 'success',
+					:mensaje => [
+						'Se ha agregado el documento al video',
+					]
+				}
+			end
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en anexar el archivo al video',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
 end
