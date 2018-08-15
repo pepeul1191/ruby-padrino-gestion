@@ -81,4 +81,23 @@ App::Archivos.controllers :categoria do
     status status
     rpta.to_json
   end
+
+  get :buscar, :map => '/categoria/buscar' do
+    rpta = nil
+		status = 200
+		begin
+			rpta = Models::Archivos::Categoria.where(Sequel.like(:nombre, params[:nombre] + '%')).limit(10).to_a
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en buscar coincidencias en los nombres de las categorias',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
 end
