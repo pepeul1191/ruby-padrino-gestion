@@ -76,4 +76,44 @@ App::Archivos.controllers :libro do
     status status
     rpta.to_json
   end
+
+  get :count, :map => '/libro/listar/autores/:libro_id' do
+    rpta = nil
+		status = 200
+		begin
+      libro_id = params[:libro_id]
+			rpta = Models::Archivos::VWLibroAutor.select(:id, :autor_id, :autor_nombre).where(:libro_id => libro_id).all().to_a
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en listar los autores del libro',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+		rpta.to_json
+  end
+
+  get :count, :map => '/libro/listar/categorias/:libro_id' do
+    rpta = nil
+		status = 200
+		begin
+      libro_id = params[:libro_id]
+			rpta = Models::Archivos::VWLibroCategoria.select(:id, :libro_id, :categoria_id, :categoria_nombre).where(:libro_id => libro_id).all().to_a
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en listar las categorias del libro',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+		rpta.to_json
+  end
 end
