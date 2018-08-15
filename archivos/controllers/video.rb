@@ -78,4 +78,42 @@ App::Archivos.controllers :video do
     status status
     rpta.to_json
   end
+
+  get :count, :map => '/video/listar/autores/:video_id' do
+    rpta = nil
+		status = 200
+		begin
+			rpta = Models::Archivos::VWVideoAutor.select(:id, :autor_id, :autor_nombre).where(:video_id => params[:video_id]).all().to_a
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en listar los autores del video',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
+
+  get :count, :map => '/video/listar/categorias/:video_id' do
+    rpta = nil
+		status = 200
+		begin
+			rpta = Models::Archivos::VWVideoCategoria.select(:id, :video_id, :categoria_id, :categoria_nombre).where(:video_id => params[:video_id]).all().to_a
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en listar las categorias del video',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
 end
