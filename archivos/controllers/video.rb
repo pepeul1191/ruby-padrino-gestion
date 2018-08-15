@@ -116,4 +116,46 @@ App::Archivos.controllers :video do
     status status
     rpta.to_json
   end
+
+  post :guardar_detalle, :map => '/video/guardar_detalle' do
+    rpta = nil
+    status = 200
+    data = JSON.parse(params[:data])
+    begin
+      if data['id'] == 'E'
+        video = Models::Archivos::Video.new(:nombre => data['nombre'], :duracion => data['duracion'], :anio => data['anio'])
+        video.save
+        rpta = {
+          :tipo_mensaje => 'success',
+          :mensaje => [
+            'Se ha registrado el detalle de un nuevo video',
+            video.id,
+          ]
+        }
+      else
+        archivo = Models::Archivos::Video.where(:id => data['id']).first
+        archivo.nombre = data['nombre']
+        archivo.duracion = data['duracion']
+        archivo.anio = data['anio']
+        archivo.save
+        rpta = {
+          :tipo_mensaje => 'success',
+          :mensaje => [
+            'Se ha editado el detalle de video',
+          ]
+        }
+      end
+    rescue Exception => e
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error en registrar el detalle del video',
+          e
+        ]
+      }
+      status = 500
+    end
+    status status
+    rpta.to_json
+  end
 end
