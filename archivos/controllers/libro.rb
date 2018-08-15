@@ -117,7 +117,7 @@ App::Archivos.controllers :libro do
 		rpta.to_json
   end
 
-  post :guardar, :map => '/libro/guardar_detalle' do
+  post :guardar_detalle, :map => '/libro/guardar_detalle' do
     rpta = nil
 		status = 200
 		data = JSON.parse(params[:data])
@@ -382,6 +382,51 @@ App::Archivos.controllers :libro do
 				]
 			}
 			status = 500
+		end
+    status status
+    rpta.to_json
+  end
+
+  post :guardar, :map => '/libro/guardar' do
+    rpta = nil
+		status = 200
+		data = JSON.parse(params[:data])
+		eliminados = data['eliminados']
+		rpta = []
+		array_nuevos = []
+		error = false
+		execption = nil
+		DB_ARCHIVOS.transaction do
+			begin
+				if eliminados.length != 0
+					eliminados.each do |eliminado|
+						Models::Archivos::LibroAutor.where(:libro_id => eliminado).delete
+						Models::Archivos::LibroCategoria.where(:libro_id => eliminado).delete
+						Models::Archivos::Libro.where(:id => eliminado).delete
+					end
+				end
+			rescue Exception => e
+				Sequel::Rollback
+				error = true
+				execption = e
+			end
+		end
+		if error == false
+			rpta = {
+				:tipo_mensaje => 'success',
+				:mensaje => [
+					'Se ha registrado los cambios en los libros',
+					array_nuevos
+					]
+				}
+		else
+			status = 500
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en guardar la tabla de libros',
+					execption.message]
+				}
 		end
     status status
     rpta.to_json
