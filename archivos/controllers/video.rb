@@ -383,4 +383,23 @@ App::Archivos.controllers :video do
     status status
     rpta
   end
+
+  get :obtener, :map => '/video/obtener/:video_id' do
+    rpta = nil
+    status = 200
+    begin
+      rpta = Models::Archivos::VWVideoArchivo.where(:id => params[:video_id]).first
+    rescue Exception => e
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error en obtener los datos del video',
+          e.message
+        ]
+      }
+      status = 500
+    end
+    status status
+    rpta.to_json
+  end
 end
