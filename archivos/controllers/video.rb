@@ -402,4 +402,49 @@ App::Archivos.controllers :video do
     status status
     rpta.to_json
   end
+
+  post :guardar, :map => '/video/guardar' do
+    rpta = nil
+    status = 200
+    data = JSON.parse(params[:data])
+    eliminados = data['eliminados']
+    rpta = []
+    array_nuevos = []
+    error = false
+    execption = nil
+    DB_ARCHIVOS.transaction do
+      begin
+        if eliminados.length != 0
+          eliminados.each do |eliminado|
+            Models::Archivos::VideoAutor.where(:video_id => eliminado).delete
+            Models::Archivos::VideoCategoria.where(:video_id => eliminado).delete
+            Models::Archivos::Video.where(:id => eliminado).delete
+          end
+        end
+      rescue Exception => e
+        Sequel::Rollback
+        error = true
+        execption = e
+      end
+    end
+    if error == false
+      rpta = {
+        :tipo_mensaje => 'success',
+        :mensaje => [
+          'Se ha registrado los cambios en los videos',
+          array_nuevos
+          ]
+        }
+    else
+      status = 500
+      rpta = {
+        :tipo_mensaje => 'error',
+        :mensaje => [
+          'Se ha producido un error en guardar la tabla de videos',
+          execption.message]
+        }
+    end
+    status status
+    rpta.to_json
+  end
 end
