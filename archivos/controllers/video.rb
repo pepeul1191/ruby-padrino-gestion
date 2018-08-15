@@ -158,4 +158,40 @@ App::Archivos.controllers :video do
     status status
     rpta.to_json
   end
+
+  put :subir, :map => '/video/subir' do
+    rpta = nil
+		status = 200
+		begin
+      file_name_array = params[:myFile][:tempfile].path.split('.')
+      extension = file_name_array[file_name_array.length - 1].strip
+			extension_id = Models::Archivos::Extension.select(:id).where(:nombre => extension).first.id
+			Models::Archivos::Extension.select(:nombre, :mime).where(:id => params[:extension_id]).first.to_json
+			nombre = params[:nombre]
+			ruta = 'public/videos/'
+			# mover el archivo
+      FileUtils.mv(params[:myFile][:tempfile].path, ruta + nombre + '.' + extension)
+			archivo = Models::Archivos::Archivo.new(:nombre => nombre, :ruta => 'videos/', :extension_id => extension_id)
+			archivo.save
+      rpta = {
+				:tipo_mensaje => 'success',
+				:mensaje => [
+					'Se ha cargado un nuevo video',
+					archivo.id,
+          CONSTANTS[:static_url] + 'videos/' + params[:nombre] + '.' + extension
+				]
+			}
+		rescue Exception => e
+			rpta = {
+				:tipo_mensaje => 'error',
+				:mensaje => [
+					'Se ha producido un error en cargar el archivo',
+					e.message
+				]
+			}
+			status = 500
+		end
+    status status
+    rpta.to_json
+  end
 end
