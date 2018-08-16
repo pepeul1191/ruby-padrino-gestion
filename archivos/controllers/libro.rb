@@ -466,7 +466,7 @@ App::Archivos.controllers :libro do
 		status = 200
 		begin
 			temp = Models::Archivos::VWLibroArchivo.where(:id => params[:libro_id]).first
-			rpta = CONSTANTS[:base_url] + temp.libro_ruta
+			rpta = CONSTANTS[:ftp][:public] + temp.libro_ruta
 		rescue Exception => e
 			rpta = {
 				:tipo_mensaje => 'error',
