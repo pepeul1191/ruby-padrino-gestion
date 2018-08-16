@@ -24,15 +24,15 @@ CONSTANTS = {
     :agricultor => 'http://localhost:3012/',
     :ubicaciones => 'http://localhost:3011/',
     :archivos => 'http://192.168.1.43:3031/',
-    :ftp => {
-      :dominio => '192.168.1.43',
-      :puerto => 22,
-      :usuario => 'pepe',
-      :contrasenia => 'kiki123',
-      :ruta => '/home/pepe/Documentos/python/archivos/static/',
-      :public => 'http://192.168.1.43:3031/'
-    },
     :estaciones => 'http://localhost:3025/',
     :sensores => 'http://localhost:3035/',
-  }
+  },
+  :ftp => {
+    :dominio => '192.168.1.5',
+    :puerto => 21,
+    :usuario => 'ubuntu',
+    :contrasenia => 'kiki123',
+    :ruta => 'Documentos/nodejs/ftp/public/',
+    :public => 'http://192.168.1.5:9090/'
+  },
 }

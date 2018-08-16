@@ -1,3 +1,5 @@
+require 'net/ftp'
+
 App::Archivos.controllers :libro do
   before :listar do
     check_csrf
@@ -321,20 +323,47 @@ App::Archivos.controllers :libro do
 			extension_id = Models::Archivos::Extension.select(:id).where(:nombre => extension).first.id
 			Models::Archivos::Extension.select(:nombre, :mime).where(:id => params[:extension_id]).first.to_json
 			nombre = params[:nombre]
+      radom_generate = random_string_number
+      nombre_generado = nombre + '_' + radom_generate + '.' +  extension #de helper
 			ruta = 'public/libros/'
 			# mover el archivo
-      FileUtils.mv(params[:myFile][:tempfile].path, ruta + nombre + '.' + extension)
-			archivo = Models::Archivos::Archivo.new(:nombre => nombre, :ruta => 'libros/', :extension_id => extension_id)
+      archivo = Models::Archivos::Archivo.new(
+        :nombre => nombre,
+        :nombre_generado => nombre_generado,
+        :ruta => 'libros/',
+        :extension_id => extension_id
+      )
 			archivo.save
+      FileUtils.mv(params[:myFile][:tempfile].path, '/tmp/' + nombre_generado)
+      host = CONSTANTS[:ftp][:dominio]
+      user = CONSTANTS[:ftp][:usuario]
+      pass = CONSTANTS[:ftp][:contrasenia]
+      Net::FTP.open(host, user, pass) do |ftp|
+        begin
+          ruta = CONSTANTS[:ftp][:ruta]
+          origin_file = File.new('/tmp/' + nombre_generado)
+          destination_file = ruta + 'libros/' + nombre_generado
+          puts origin_file
+          puts destination_file
+          ftp.put(origin_file, destination_file)
+        rescue => e
+          puts e.backtrace
+          puts e
+          raise 'Eror en FTP'
+        ensure
+          ftp.close
+        end
+      end
       rpta = {
 				:tipo_mensaje => 'success',
 				:mensaje => [
 					'Se ha cargado un nuevo libro',
 					archivo.id,
-          CONSTANTS[:static_url] + 'libros/' + params[:nombre] + '.' + extension
+          CONSTANTS[:ftp][:public] + 'libros/' + nombre_generado
 				]
 			}
 		rescue Exception => e
+      puts e.backtrace
 			rpta = {
 				:tipo_mensaje => 'error',
 				:mensaje => [

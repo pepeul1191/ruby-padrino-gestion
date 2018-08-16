@@ -1,5 +1,13 @@
 Padrino.configure_apps do
   helpers do
+    def random_string_number
+      length = 10
+      chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
+      radom_value = ''
+      length.times { radom_value << chars[rand(chars.size)] }
+      radom_value
+    end
+
     def load_css(csss)
       rpta = ''
       if defined? csss
