@@ -314,7 +314,7 @@ App::Archivos.controllers :libro do
     rpta.to_json
   end
 
-  put :subir, :map => '/libro/subir' do
+  post :subir, :map => '/libro/subir' do
     rpta = nil
 		status = 200
 		begin
@@ -343,8 +343,8 @@ App::Archivos.controllers :libro do
           ruta = CONSTANTS[:ftp][:ruta]
           origin_file = File.new('/tmp/' + nombre_generado)
           destination_file = ruta + 'libros/' + nombre_generado
-          puts origin_file
-          puts destination_file
+          #puts origin_file
+          #puts destination_file
           ftp.put(origin_file, destination_file)
         rescue => e
           puts e.backtrace
