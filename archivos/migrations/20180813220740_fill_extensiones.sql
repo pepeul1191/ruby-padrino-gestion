@@ -648,6 +648,6 @@ INSERT INTO extensiones (id, nombre, mime) VALUES
   (643, 'zip', 'application/zip'),
   (644, 'zip', 'multipart/x-zip'),
   (645, 'zoo', 'application/octet-stream'),
-  (646, 'zsh', 'text/x-script.zsh');
+  (646, 'zsh', 'text/x-script.zsh'),
   (647, 'mp4', 'video/mp4');
 -- migrate:down
